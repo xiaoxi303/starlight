@@ -1,5 +1,5 @@
 /* ======================================================
-   Aero Space - Liquid Glassmorphism Theme 4.0 (Ultimate Edition)
+   Aero Space - Liquid Glassmorphism Theme 4.0 (Ultimate Edition - Bug Fixed)
    by Xiaoxi (Video Editor X AI Coder)
    ====================================================== */
 
@@ -33,22 +33,25 @@
 
 /* ======================================================
    2. 全局基础柔化 (大圆角应用)
-   ===================================================== = */
+   ====================================================== */
 /* 搜索框大圆角 */
 .search-input {
   border-radius: var(--radius-md) !important;
 }
 
 /* ======================================================
-   3. 导航栏终极进化：悬浮大胶囊 (Floating Pill Header)
+   3. 导航栏终极进化：居中悬浮大胶囊 (Starlight 专属修正版)
    ====================================================== */
-site-header {
-  position: sticky !important;
-  top: 16px !important; /* 距离顶部呼吸空间 */
-  width: 92% !important; /* 左右留白 */
+.header {
+  top: 16px !important; /* 距离顶部留出呼吸空间 */
+  width: 92vw !important; /* 使用视口宽度 */
   max-width: 1400px !important;
-  margin: 0 auto !important; /* 水平居中 */
-  border-radius: 50px !important; /* 胶囊形状 */
+  
+  /* 绝对居中 */
+  left: 50% !important;
+  transform: translateX(-50%) !important; 
+  
+  border-radius: 50px !important; /* 终极大胶囊 */
   
   /* 强化液体玻璃质感 */
   background-color: rgba(20, 21, 30, 0.65) !important;
@@ -61,21 +64,16 @@ site-header {
               0 0 20px -5px rgba(167, 139, 250, 0.15) !important;
               
   transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1) !important;
-  z-index: 100 !important; /* 永远在最上层 */
-}
-
-/* 让导航栏内部内容收一点 */
-site-header .header {
-  padding: 0 24px !important; 
+  z-index: 100 !important; 
 }
 
 /* 悬浮时液体光晕增强 */
-site-header:hover {
+.header:hover {
   background-color: rgba(20, 21, 30, 0.8) !important;
   border-color: rgba(167, 139, 250, 0.4) !important;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9), 
               0 0 30px -5px rgba(167, 139, 250, 0.3) !important;
-  transform: translateY(-2px); 
+  transform: translate(-50%, -2px) !important; /* 保持居中的同时微微上浮 */
 }
 
 /* ======================================================
@@ -156,7 +154,10 @@ sidebar-drawer {
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
   border-right: 1px solid var(--glass-border) !important;
-  /* 适配悬浮顶栏 */
+}
+
+/* 修复侧边栏顶部间距，防止顶到胶囊 */
+.sidebar-pane {
   padding-top: 16px !important;
 }
 
@@ -208,7 +209,6 @@ sidebar-drawer {
 /* ======================================================
    8. 新增细节特效：电影胶片颗粒底噪 (Cinematic Grain Texture)
    ====================================================== */
-/* 使用Base64编码的微弱噪点，直接作为全站覆盖层 */
 body::after {
   content: "";
   position: fixed;
@@ -216,44 +216,39 @@ body::after {
   left: 0;
   width: 100vw;
   height: 100vh;
-  /* 👇 这里的 Base64 就是生成的噪点颗粒纹理 */
-  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAUVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAnz94xAAAAGnRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAACQklEQVQ4jWNgYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzNzeX65L3AAA=")!
+  /* 已经修复为正确的分号结尾 ; */
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAUVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAnz94xAAAAGnRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAACQklEQVQ4jWNgYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzNzeX65L3AAA=");
   
-  /* 颗粒需要极其微弱，只需一点点质感，设置超低透明度 */
   opacity: 0.025; 
-  pointer-events: none; /* 防止遮挡鼠标点击事件 */
-  z-index: 9999; /* 放在所有元素最上面 */
+  pointer-events: none; 
+  z-index: 9999; 
 }
 
 /* ======================================================
-   9. 新增细节特效：“时间线播放头”滚动手感 (Reading Progress Timeline)
+   9. 新增细节特效：“时间线播放头” (修正版)
    ====================================================== */
-/* 这里利用 CSS scroll-timeline 特性实现 (Graceful Degradation for unsupporting browsers) */
 @supports (animation-timeline: scroll()) {
-  site-header::after {
+  .header::after {
     content: "";
     position: absolute;
-    bottom: 0; /* 放在胶囊导航栏的最底部 */
-    left: 24px; /* 对齐内部 padding */
+    bottom: 0; 
+    left: 24px; 
     right: 24px;
-    height: 2.5px; /* 极细的发光线，像时间线播放头 */
+    height: 2.5px; 
     background: linear-gradient(90deg, var(--sl-color-accent) 0%, #d8b4fe 100%);
     border-radius: 2px;
     transform-origin: left center;
     
-    /* 绑定滚动动画 */
     animation-timeline: scroll(nearest);
     animation-name: timelinePlayhead;
-    animation-timing-function: linear; /* 线性跟随滚动 */
+    animation-timing-function: linear; 
     
-    /* 播放头自身的发光特效 */
     box-shadow: 0 0 10px -1px var(--liquid-glow) !important;
   }
 }
 
-/* 定义播放头从 0% 增长到 100% 的关键帧 */
 @keyframes timelinePlayhead {
   0% { transform: scaleX(0); opacity: 0; }
-  2% { transform: scaleX(0.01); opacity: 1; } /* 开始滚动后立刻显现 */
+  2% { transform: scaleX(0.01); opacity: 1; } 
   100% { transform: scaleX(1); opacity: 1; }
 }
