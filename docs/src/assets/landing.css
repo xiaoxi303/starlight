@@ -1,46 +1,53 @@
 /* ======================================================
-   Aero Space - Liquid Glassmorphism Theme 8.0 (The Truth)
+   Aero Space - Liquid Glassmorphism Theme 9.0 (Double Layer FIX)
    by Xiaoxi (Video Editor X AI Coder)
-   不精简版：修复双层顶栏、独立悬浮侧边栏、电影底噪、滚动时间线
+   不精简版：强制剥离双层外壳，实现唯一悬浮胶囊
    ====================================================== */
 
 /* ------------------------------------------------------
-   1. 全局变量重定义 (大圆角 & 液体霓虹)
+   1. 基础变量重定义
    ------------------------------------------------------ */
 :root {
-  --radius-xl: 32px; /* 外部大胶囊圆角 */
-  --radius-lg: 20px; /* 卡片、侧边栏面板圆角 */
-  --radius-md: 12px; /* 按钮、搜索框圆角 */
+  --radius-xl: 32px; 
+  --radius-lg: 20px; 
+  --radius-md: 12px; 
 
   --sl-color-accent-low: #1e144a;
-  --sl-color-accent: #a78bfa; /* 核心霓虹紫 */
+  --sl-color-accent: #a78bfa; 
   --sl-color-accent-high: #ddd6fe;
 
-  --glass-bg: rgba(20, 21, 30, 0.75); /* 玻璃半透明度 */
-  --glass-border: rgba(255, 255, 255, 0.1); /* 内发光边框 */
-  --liquid-glow: rgba(167, 139, 250, 0.4); /* 霓虹紫光晕 */
+  --glass-bg: rgba(20, 21, 30, 0.75); 
+  --glass-border: rgba(255, 255, 255, 0.1); 
+  --liquid-glow: rgba(167, 139, 250, 0.4); 
 
   --transition-liquid: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 :root[data-theme='dark'] {
-  --sl-color-bg: #0b0d12; /* 深邃底色 */
+  --sl-color-bg: #0b0d12;
 }
 
 /* ------------------------------------------------------
-   2. 导航栏：扒掉双层外壳，塑造内层胶囊
+   2. 核心修复：彻底扒掉最外层壳 (Stripping the Shell)
    ------------------------------------------------------ */
-/* 彻底清除 Starlight 默认的 site-header 样式（防止出现双重边框） */
+/* 强制取消 Starlight 顶栏外壳的所有视觉特征 */
 site-header {
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
+  filter: none !important;
+  /* 确保外壳不占位，不产生多余的边框感 */
+  height: 0 !important; 
+  overflow: visible !important;
 }
 
-/* 重新定义 .header 为悬浮胶囊 */
+/* ------------------------------------------------------
+   3. 重新塑造内层胶囊 (.header) 为唯一发光体
+   ------------------------------------------------------ */
 .header {
+  /* 绝对固定定位 */
   position: fixed !important; 
   top: 16px !important; 
   left: 0 !important;
@@ -49,56 +56,61 @@ site-header {
   max-width: 1400px !important;
   margin: 0 auto !important; 
   
-  padding: 0 40px !important; /* 增加内缩，让内容更有呼吸感 */
+  /* 内部内容呼吸感 */
+  padding: 0 40px !important;
+  height: 64px !important; /* 给定固定高度，确保内部垂直居中 */
   border-radius: 50px !important; 
   
-  /* 液体玻璃质感 */
+  /* 液体玻璃质感 - 这是唯一的一层 */
   background-color: var(--glass-bg) !important;
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
   
-  /* 唯一发光边框与超级悬浮阴影 */
+  /* 唯一的发光边框与阴影 */
   border: 1px solid var(--glass-border) !important;
   box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8), 
               0 0 20px -5px var(--liquid-glow) !important;
               
   transition: var(--transition-liquid) !important;
   z-index: 1000 !important; 
+  
+  /* 修复 Starlight 的默认 grid 布局，防止挤压 */
+  display: grid !important;
+  align-items: center !important;
 }
 
-/* 保护网站标题，防止在暗色下模糊 */
+/* 保护网站标题可见度 */
 .site-title {
   color: #fff !important;
   font-weight: 800 !important;
   letter-spacing: -0.02em;
 }
 
-/* 顶栏悬浮互动 */
+/* 悬浮互动效果 */
 .header:hover {
   background-color: rgba(20, 21, 30, 0.85) !important;
   transform: translateY(-2px);
   border-color: rgba(167, 139, 250, 0.3) !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9), 
+              0 0 30px -5px var(--liquid-glow) !important;
 }
 
 /* ------------------------------------------------------
-   3. 侧边栏：独立悬浮玻璃面板 (修正布局)
+   4. 侧边栏：独立悬浮玻璃面板
    ------------------------------------------------------ */
-/* 去掉默认侧边栏背景 */
 sidebar-drawer {
   background: transparent !important;
   border: none !important;
 }
 
-/* 给侧边栏加一个向下偏移，防止被顶栏遮挡 */
 .sidebar-pane {
-  padding-top: 100px !important; 
+  padding-top: 100px !important; /* 避开悬浮顶栏 */
   background: transparent !important;
 }
 
-/* 侧边栏内部容器：真正的悬浮面板 */
-/* 注意：这里我们同时作用于 nav 标签以确保 Starlight 适配 */
-.sidebar-pane nav,
-.sidebar-content {
+/* 侧边栏内容容器：变圆角悬浮玻璃 */
+.sidebar-content,
+.sidebar-pane nav {
   background-color: var(--glass-bg) !important;
   backdrop-filter: blur(16px);
   margin: 0 16px !important;
@@ -106,7 +118,6 @@ sidebar-drawer {
   border: 1px solid var(--glass-border) !important;
   padding: 16px 8px !important;
   box-shadow: 0 10px 30px rgba(0,0,0,0.4) !important;
-  /* 面板高度自适应，不贴地 */
   height: fit-content !important;
   max-height: 75vh !important;
 }
@@ -136,7 +147,7 @@ sidebar-drawer {
 }
 
 /* ------------------------------------------------------
-   4. 电影胶片颗粒底噪 (全站图层)
+   5. 电影胶片颗粒底噪 (Cinematic Grain)
    ------------------------------------------------------ */
 body::after {
   content: ""; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
@@ -145,25 +156,24 @@ body::after {
 }
 
 /* ------------------------------------------------------
-   5. 时间线滚动进度条 (修正版)
+   6. 时间线滚动进度条
    ------------------------------------------------------ */
 @supports (animation-timeline: scroll()) {
   .header::after {
-    content: ""; position: absolute; bottom: 0; left: 32px; right: 32px; height: 2px; 
+    content: ""; position: absolute; bottom: 0; left: 40px; right: 40px; height: 2px; 
     background: linear-gradient(90deg, var(--sl-color-accent), #d8b4fe);
     border-radius: 2px; transform-origin: left;
     animation: timelinePlayhead linear;
-    animation-timeline: scroll(root); /* 监听全站滚动 */
+    animation-timeline: scroll(root);
   }
 }
-
 @keyframes timelinePlayhead {
   0% { transform: scaleX(0); }
   100% { transform: scaleX(1); }
 }
 
 /* ------------------------------------------------------
-   6. 卡片、按钮、搜索框：全站柔化
+   7. 全局微调 (卡片、按钮、手机端)
    ------------------------------------------------------ */
 .card {
   border-radius: var(--radius-lg) !important;
@@ -173,31 +183,13 @@ body::after {
 }
 .card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px var(--liquid-glow) !important; }
 
-.hero .actions a { border-radius: 50px !important; transition: var(--transition-liquid) !important; }
 .search-input { border-radius: var(--radius-md) !important; }
 
-/* ------------------------------------------------------
-   7. 进场动画：丝滑淡入
-   ------------------------------------------------------ */
-.hero > *, .sl-markdown-content > * {
-  animation: liquidFadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  opacity: 0;
-}
-@keyframes liquidFadeUp {
-  0% { opacity: 0; transform: translateY(30px) scale(0.95); }
-  100% { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-/* ------------------------------------------------------
-   8. 响应式适配 (手机端)
-   ------------------------------------------------------ */
 @media (max-width: 50rem) {
   .header {
     top: 0 !important; width: 100% !important; border-radius: 0 !important;
     padding: 0 16px !important; border: none !important;
     border-bottom: 1px solid var(--glass-border) !important;
-    left: 0 !important; transform: none !important;
   }
   .sidebar-pane { padding-top: 0 !important; }
-  .sidebar-content, .sidebar-pane nav { margin: 0 !important; border-radius: 0 !important; width: 100% !important; max-height: none !important;}
 }
