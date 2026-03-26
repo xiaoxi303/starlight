@@ -1,79 +1,180 @@
 /* ======================================================
-   1. 重新定义主题色 (赛博霓虹紫蓝配色)
+   Aero Space - Liquid Glassmorphism Theme 2.0
+   by Xiaoxi (Video Editor X AI Coder)
+   ====================================================== */
+
+/* ======================================================
+   1. 基础变量重定义 (大圆角 & 液体霓虹)
    ====================================================== */
 :root {
-  /* 基础品牌色 - 霓虹紫 */
-  --sl-color-accent-low: #1a103c;
-  --sl-color-accent: #8b5cf6; 
-  --sl-color-accent-high: #c4b5fd;
-  
-  /* 导航栏半透明背景色 */
-  --sl-color-bg-nav: rgba(23, 24, 34, 0.75);
+  /* 定义全局大圆角变量 - 核心优化 */
+  --radius-xl: 32px; /* 外部大容器 */
+  --radius-lg: 20px; /* 卡片、侧边栏容器 */
+  --radius-md: 12px; /* 按钮、链接 */
+
+  /* 定义赛博极客颜色 (增加亮度以提升通透感) */
+  --sl-color-accent-low: #1e144a;
+  --sl-color-accent: #a78bfa; /* 更亮的霓虹紫 */
+  --sl-color-accent-high: #ddd6fe;
+
+  /* 液体玻璃的基础背景色 (极低透明度 + 背景模糊是关键) */
+  --glass-bg: rgba(20, 21, 30, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.08); /* 极细的内发光边框 */
+  --liquid-glow: rgba(167, 139, 250, 0.5); /* 霓虹紫液体光晕 */
+
+  /* 定义全局液体过渡动画 - 丝滑的关键 */
+  --transition-liquid: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-/* 强制覆盖暗色模式下的背景，让它更深邃 */
+/* 覆盖底层背景色，使其更深邃以反衬玻璃感 */
 :root[data-theme='dark'] {
-  --sl-color-bg: #0f111a;
+  --sl-color-bg: #0b0d12;
 }
 
 /* ======================================================
-   2. UI 优化：高级毛玻璃导航栏 (类似苹果官网)
+   2. 全局基础柔化 (大圆角应用)
+   ====================================================== */
+/* 搜索框大圆角 */
+.search-input {
+  border-radius: var(--radius-md) !important;
+}
+
+/* ======================================================
+   3. 导航栏优化：强化毛玻璃 (Liquid Header)
    ====================================================== */
 site-header {
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  background-color: var(--sl-color-bg-nav) !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(20px) saturate(180%); /* 增加模糊和饱和度 */
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  background-color: var(--glass-bg) !important;
+  border-bottom: 1px solid var(--glass-border) !important;
+  transition: var(--transition-liquid);
 }
 
 /* ======================================================
-   3. 交互动画：首页卡片的悬浮发光与跳动
+   4. 卡片优化：液体玻璃悬浮 (The Liquid Card)
    ====================================================== */
 .card {
-  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease !important;
-  border-radius: 12px !important;
-  background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0) 100%) !important;
-  border: 1px solid rgba(255,255,255,0.05) !important;
+  position: relative;
+  overflow: hidden; /* 裁剪内部液体光晕 */
+  border-radius: var(--radius-lg) !important;
+  background-color: var(--glass-bg) !important;
+  border: 1px solid var(--glass-border) !important;
+  /* 增加基础毛玻璃模糊，让卡片内部通透 */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  
+  transition: var(--transition-liquid) !important;
 }
 
+/* 液体卡片悬浮时的魔法 */
 .card:hover {
-  transform: translateY(-6px) scale(1.02);
-  /* 悬浮时的霓虹发光阴影 */
-  box-shadow: 0 12px 24px -10px rgba(139, 92, 246, 0.5) !important; 
-  border-color: var(--sl-color-accent) !important;
+  transform: translateY(-8px) scale(1.03); /* 微微膨胀滑出 */
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  /* 液体光晕阴影 */
+  box-shadow: 0 20px 40px -15px var(--liquid-glow) !important;
+}
+
+/* 液体光晕效果 - 使用伪元素在悬浮时流动 */
+.card::after {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, var(--liquid-glow) 0%, rgba(255,255,255,0) 70%);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  pointer-events: none;
+  z-index: -1; /* 在文字下方 */
+}
+
+.card:hover::after {
+  opacity: 0.2; /* 悬浮时显现淡淡的液体流动感 */
+  animation: liquidFlow 4s linear infinite;
+}
+
+/* 定义液体流动动画 */
+@keyframes liquidFlow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 /* ======================================================
-   4. 进场动画：全局元素的丝滑淡入 (Fade-Up)
+   5. 主页大按钮：胶囊液体风格 (Liquid Action Button)
    ====================================================== */
-/* 让主页的大标题和描述像视频关键帧一样滑入 */
-.hero > * {
-  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+.hero .actions a {
+  border-radius: 50px !important; /* 完全的胶囊圆角 */
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700 !important;
+  transition: var(--transition-liquid) !important;
+  border: 1px solid transparent !important;
+}
+
+/* 液体主按钮 (Variant=Primary) */
+.hero .actions a.primary {
+  background: linear-gradient(135deg, var(--sl-color-accent) 0%, #d8b4fe 100%) !important;
+  box-shadow: 0 4px 15px -2px var(--liquid-glow) !important;
+}
+
+.hero .actions a.primary:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 25px -2px var(--liquid-glow) !important;
+}
+
+/* ======================================================
+   6. 侧边栏优化：柔滑液体链接 (Liquid Sidebar)
+   ====================================================== */
+sidebar-drawer {
+  background-color: rgba(11, 13, 18, 0.8) !important; /* 深度背景毛玻璃 */
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border-right: 1px solid var(--glass-border) !important;
+}
+
+.sidebar-pane a {
+  border-radius: var(--radius-lg) !important; /* 大圆角链接项 */
+  margin: 4px 12px !important; /* 增加间距以显现圆角 */
+  padding: 8px 16px !important;
+  transition: var(--transition-liquid) !important;
+  color: #94a3b8 !important; /* 默认状态下加一个柔和的左边框占位 */
+  border-left: 3px solid transparent !important;
+}
+
+/* 侧边栏链接悬浮：液体向右流动 */
+.sidebar-pane a:hover:not([aria-current='page']) {
+  background-color: rgba(167, 139, 250, 0.08) !important;
+  color: var(--sl-color-white) !important;
+  border-left: 3px solid rgba(167, 139, 250, 0.4) !important;
+  transform: translateX(6px); /* 更明显的向右液体平移 */
+}
+
+/* 当前激活链接：液体呼吸光晕 */
+.sidebar-pane a[aria-current='page'] {
+  background: linear-gradient(90deg, rgba(167, 139, 250, 0.1) 0%, rgba(167, 139, 250, 0) 100%) !important;
+  color: var(--sl-color-accent) !important;
+  font-weight: 600 !important;
+  border-left: 3px solid var(--sl-color-accent) !important;
+  /* 霓虹发光阴影 */
+  box-shadow: inset 25px 0 25px -25px var(--liquid-glow) !important;
+}
+
+/* ======================================================
+   7. 进场动画优化：更柔滑的浮现
+   ====================================================== */
+.hero > *, .sl-markdown-content > * {
+  animation: liquidFadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   opacity: 0;
 }
 
-/* 给不同元素设置稍微错开的延迟，产生节奏感 */
-.hero > h1 { animation-delay: 0.1s; }
-.hero > .tagline { animation-delay: 0.2s; }
-.hero > .sl-flex { animation-delay: 0.3s; } /* 按钮组 */
-
-/* 正文内容的淡入 */
-.sl-markdown-content > * {
-  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  opacity: 0;
-}
-.sl-markdown-content > *:nth-child(1) { animation-delay: 0.1s; }
-.sl-markdown-content > *:nth-child(2) { animation-delay: 0.2s; }
-.sl-markdown-content > *:nth-child(3) { animation-delay: 0.3s; }
-
-/* 定义淡入关键帧 */
-@keyframes fadeUp {
+@keyframes liquidFadeUp {
   0% {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateY(30px) scale(0.95); /* 进场时有一个微弱的膨胀感 */
   }
   100% {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateY(0) scale(1);
   }
 }
