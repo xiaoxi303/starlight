@@ -1,5 +1,5 @@
 /* ======================================================
-   Aero Space - Liquid Glassmorphism Theme 2.0
+   Aero Space - Liquid Glassmorphism Theme 3.0 (Ultimate)
    by Xiaoxi (Video Editor X AI Coder)
    ====================================================== */
 
@@ -40,14 +40,42 @@
 }
 
 /* ======================================================
-   3. 导航栏优化：强化毛玻璃 (Liquid Header)
+   3. 导航栏终极进化：居中悬浮大胶囊 (Floating Pill Header)
    ====================================================== */
 site-header {
-  backdrop-filter: blur(20px) saturate(180%); /* 增加模糊和饱和度 */
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  background-color: var(--glass-bg) !important;
-  border-bottom: 1px solid var(--glass-border) !important;
-  transition: var(--transition-liquid);
+  position: sticky !important;
+  top: 16px !important; /* 距离页面顶部留出呼吸空间 */
+  width: 92% !important; /* 左右留白 */
+  max-width: 1400px !important;
+  margin: 0 auto !important; /* 绝对水平居中 */
+  border-radius: 50px !important; /* 终极大圆角 / 胶囊形状 */
+  
+  /* 强化液体玻璃质感 */
+  background-color: rgba(20, 21, 30, 0.65) !important;
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
+  
+  /* 发光边框与超级悬浮阴影 */
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8), 
+              0 0 20px -5px rgba(167, 139, 250, 0.15) !important;
+              
+  transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1) !important;
+  z-index: 100 !important; /* 确保永远在最上层 */
+}
+
+/* 让导航栏内部的内容往里收一点，适应大圆角 */
+site-header .header {
+  padding: 0 24px !important; 
+}
+
+/* 鼠标悬浮在顶栏时：液体光晕增强，微微上浮 */
+site-header:hover {
+  background-color: rgba(20, 21, 30, 0.8) !important;
+  border-color: rgba(167, 139, 250, 0.4) !important;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9), 
+              0 0 30px -5px rgba(167, 139, 250, 0.3) !important;
+  transform: translateY(-2px); 
 }
 
 /* ======================================================
@@ -131,6 +159,8 @@ sidebar-drawer {
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
   border-right: 1px solid var(--glass-border) !important;
+  /* 适配悬浮顶栏：给侧边栏顶部加一点空间，防止重叠 */
+  padding-top: 16px !important;
 }
 
 .sidebar-pane a {
