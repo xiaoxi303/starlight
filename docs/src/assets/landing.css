@@ -1,27 +1,79 @@
+/* ======================================================
+   1. 重新定义主题色 (赛博霓虹紫蓝配色)
+   ====================================================== */
 :root {
-	--purple-hsl: 255, 60%, 60%;
-	--overlay-blurple: hsla(var(--purple-hsl), 0.2);
+  /* 基础品牌色 - 霓虹紫 */
+  --sl-color-accent-low: #1a103c;
+  --sl-color-accent: #8b5cf6; 
+  --sl-color-accent-high: #c4b5fd;
+  
+  /* 导航栏半透明背景色 */
+  --sl-color-bg-nav: rgba(23, 24, 34, 0.75);
 }
 
-:root[data-theme='light'] {
-	--purple-hsl: 255, 85%, 65%;
+/* 强制覆盖暗色模式下的背景，让它更深邃 */
+:root[data-theme='dark'] {
+  --sl-color-bg: #0f111a;
 }
 
-[data-has-hero] .page {
-	background:
-		linear-gradient(215deg, var(--overlay-blurple), transparent 40%),
-		radial-gradient(var(--overlay-blurple), transparent 40%) no-repeat -60vw -40vh / 105vw 200vh,
-		radial-gradient(var(--overlay-blurple), transparent 65%) no-repeat 50% calc(100% + 20rem) /
-			60rem 30rem;
+/* ======================================================
+   2. UI 优化：高级毛玻璃导航栏 (类似苹果官网)
+   ====================================================== */
+site-header {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background-color: var(--sl-color-bg-nav) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
 }
 
-[data-has-hero] header {
-	border-bottom: 1px solid transparent;
-	background-color: transparent;
-	-webkit-backdrop-filter: blur(16px);
-	backdrop-filter: blur(16px);
+/* ======================================================
+   3. 交互动画：首页卡片的悬浮发光与跳动
+   ====================================================== */
+.card {
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s ease !important;
+  border-radius: 12px !important;
+  background: linear-gradient(145deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0) 100%) !important;
+  border: 1px solid rgba(255,255,255,0.05) !important;
 }
 
-[data-has-hero] .hero > img {
-	filter: drop-shadow(0 0 3rem var(--overlay-blurple));
+.card:hover {
+  transform: translateY(-6px) scale(1.02);
+  /* 悬浮时的霓虹发光阴影 */
+  box-shadow: 0 12px 24px -10px rgba(139, 92, 246, 0.5) !important; 
+  border-color: var(--sl-color-accent) !important;
+}
+
+/* ======================================================
+   4. 进场动画：全局元素的丝滑淡入 (Fade-Up)
+   ====================================================== */
+/* 让主页的大标题和描述像视频关键帧一样滑入 */
+.hero > * {
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+
+/* 给不同元素设置稍微错开的延迟，产生节奏感 */
+.hero > h1 { animation-delay: 0.1s; }
+.hero > .tagline { animation-delay: 0.2s; }
+.hero > .sl-flex { animation-delay: 0.3s; } /* 按钮组 */
+
+/* 正文内容的淡入 */
+.sl-markdown-content > * {
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+}
+.sl-markdown-content > *:nth-child(1) { animation-delay: 0.1s; }
+.sl-markdown-content > *:nth-child(2) { animation-delay: 0.2s; }
+.sl-markdown-content > *:nth-child(3) { animation-delay: 0.3s; }
+
+/* 定义淡入关键帧 */
+@keyframes fadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
