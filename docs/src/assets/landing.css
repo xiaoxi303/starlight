@@ -1,148 +1,117 @@
 /* ======================================================
-   Aero Space - Liquid Glassmorphism Theme 6.0 (Full Integration)
+   Aero Space - Liquid Glassmorphism Theme 8.0 (The Truth)
    by Xiaoxi (Video Editor X AI Coder)
+   不精简版：修复双层顶栏、独立悬浮侧边栏、电影底噪、滚动时间线
    ====================================================== */
 
-/* ======================================================
-   1. 基础变量重定义
-   ====================================================== */
+/* ------------------------------------------------------
+   1. 全局变量重定义 (大圆角 & 液体霓虹)
+   ------------------------------------------------------ */
 :root {
-  --radius-xl: 32px; 
-  --radius-lg: 20px; 
-  --radius-md: 12px; 
+  --radius-xl: 32px; /* 外部大胶囊圆角 */
+  --radius-lg: 20px; /* 卡片、侧边栏面板圆角 */
+  --radius-md: 12px; /* 按钮、搜索框圆角 */
 
   --sl-color-accent-low: #1e144a;
-  --sl-color-accent: #a78bfa; 
+  --sl-color-accent: #a78bfa; /* 核心霓虹紫 */
   --sl-color-accent-high: #ddd6fe;
 
-  --glass-bg: rgba(20, 21, 30, 0.65);
-  --glass-border: rgba(255, 255, 255, 0.08); 
-  --liquid-glow: rgba(167, 139, 250, 0.5); 
+  --glass-bg: rgba(20, 21, 30, 0.75); /* 玻璃半透明度 */
+  --glass-border: rgba(255, 255, 255, 0.1); /* 内发光边框 */
+  --liquid-glow: rgba(167, 139, 250, 0.4); /* 霓虹紫光晕 */
 
-  --transition-liquid: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  --transition-liquid: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 :root[data-theme='dark'] {
-  --sl-color-bg: #0b0d12;
+  --sl-color-bg: #0b0d12; /* 深邃底色 */
 }
 
-/* ======================================================
-   2. 全局基础柔化
-   ====================================================== */
-.search-input {
-  border-radius: var(--radius-md) !important;
-}
-
-/* ======================================================
-   3. 导航栏：居中悬浮大胶囊
-   ====================================================== */
-/* 扒掉外壳 */
+/* ------------------------------------------------------
+   2. 导航栏：扒掉双层外壳，塑造内层胶囊
+   ------------------------------------------------------ */
+/* 彻底清除 Starlight 默认的 site-header 样式（防止出现双重边框） */
 site-header {
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
   backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
+/* 重新定义 .header 为悬浮胶囊 */
 .header {
+  position: fixed !important; 
   top: 16px !important; 
   left: 0 !important;
   right: 0 !important;
   width: 92% !important; 
   max-width: 1400px !important;
   margin: 0 auto !important; 
-  padding: 0 32px !important;
+  
+  padding: 0 40px !important; /* 增加内缩，让内容更有呼吸感 */
   border-radius: 50px !important; 
+  
+  /* 液体玻璃质感 */
   background-color: var(--glass-bg) !important;
-  backdrop-filter: blur(24px) saturate(200%);
-  -webkit-backdrop-filter: blur(24px) saturate(200%);
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8), 
-              0 0 20px -5px rgba(167, 139, 250, 0.15) !important;
-  transition: var(--transition-liquid) !important;
-  z-index: 100 !important; 
-}
-
-.site-title {
-  color: var(--sl-color-white) !important;
-  font-weight: 700 !important;
-}
-
-.header:hover {
-  background-color: rgba(20, 21, 30, 0.8) !important;
-  transform: translateY(-2px) !important; 
-}
-
-/* ======================================================
-   4. 卡片优化：液体玻璃悬浮
-   ====================================================== */
-.card {
-  position: relative;
-  overflow: hidden; 
-  border-radius: var(--radius-lg) !important;
-  background-color: var(--glass-bg) !important;
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  
+  /* 唯一发光边框与超级悬浮阴影 */
   border: 1px solid var(--glass-border) !important;
-  backdrop-filter: blur(10px);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8), 
+              0 0 20px -5px var(--liquid-glow) !important;
+              
   transition: var(--transition-liquid) !important;
+  z-index: 1000 !important; 
 }
 
-.card:hover {
-  transform: translateY(-8px) scale(1.03); 
-  box-shadow: 0 20px 40px -15px var(--liquid-glow) !important;
+/* 保护网站标题，防止在暗色下模糊 */
+.site-title {
+  color: #fff !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em;
 }
 
-.card::after {
-  content: "";
-  position: absolute;
-  top: -50%; left: -50%; width: 200%; height: 200%;
-  background: radial-gradient(circle, var(--liquid-glow) 0%, rgba(255,255,255,0) 70%);
-  opacity: 0; transition: opacity 0.6s ease;
-  pointer-events: none; z-index: -1; 
+/* 顶栏悬浮互动 */
+.header:hover {
+  background-color: rgba(20, 21, 30, 0.85) !important;
+  transform: translateY(-2px);
+  border-color: rgba(167, 139, 250, 0.3) !important;
 }
 
-.card:hover::after { opacity: 0.2; animation: liquidFlow 4s linear infinite; }
-
-@keyframes liquidFlow { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-/* ======================================================
-   5. 主页按钮
-   ====================================================== */
-.hero .actions a {
-  border-radius: 50px !important; 
-  transition: var(--transition-liquid) !important;
-}
-
-.hero .actions a.primary {
-  background: linear-gradient(135deg, var(--sl-color-accent) 0%, #d8b4fe 100%) !important;
-}
-
-/* ======================================================
-   6. 侧边栏优化：独立悬浮玻璃胶囊
-   ====================================================== */
-/* 让侧边栏整体“飘”起来 */
+/* ------------------------------------------------------
+   3. 侧边栏：独立悬浮玻璃面板 (修正布局)
+   ------------------------------------------------------ */
+/* 去掉默认侧边栏背景 */
 sidebar-drawer {
-  background: transparent !important; /* 去掉默认背景 */
+  background: transparent !important;
   border: none !important;
 }
 
+/* 给侧边栏加一个向下偏移，防止被顶栏遮挡 */
 .sidebar-pane {
-  /* 关键：向下移动，避开悬浮顶栏 */
   padding-top: 100px !important; 
+  background: transparent !important;
 }
 
-/* 侧边栏内部容器改为圆角玻璃 */
+/* 侧边栏内部容器：真正的悬浮面板 */
+/* 注意：这里我们同时作用于 nav 标签以确保 Starlight 适配 */
+.sidebar-pane nav,
 .sidebar-content {
   background-color: var(--glass-bg) !important;
   backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
   margin: 0 16px !important;
   border-radius: var(--radius-lg) !important;
   border: 1px solid var(--glass-border) !important;
   padding: 16px 8px !important;
-  box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5) !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4) !important;
+  /* 面板高度自适应，不贴地 */
+  height: fit-content !important;
+  max-height: 75vh !important;
 }
 
-/* 侧边栏链接样式优化 */
+/* 侧边栏链接动效 */
 .sidebar-pane a {
   border-radius: var(--radius-md) !important;
   margin: 4px 8px !important;
@@ -152,15 +121,13 @@ sidebar-drawer {
   border-left: 3px solid transparent !important;
 }
 
-/* 悬浮动效：向右滑动 + 变色 */
 .sidebar-pane a:hover:not([aria-current='page']) {
   background-color: rgba(167, 139, 250, 0.1) !important;
-  color: var(--sl-color-white) !important;
+  color: #fff !important;
   transform: translateX(6px);
   border-left: 3px solid rgba(167, 139, 250, 0.4) !important;
 }
 
-/* 当前页面激活态 */
 .sidebar-pane a[aria-current='page'] {
   background: linear-gradient(90deg, rgba(167, 139, 250, 0.15) 0%, transparent 100%) !important;
   color: var(--sl-color-accent) !important;
@@ -168,39 +135,69 @@ sidebar-drawer {
   font-weight: 600 !important;
 }
 
-/* ======================================================
-   7. 进场动画
-   ====================================================== */
+/* ------------------------------------------------------
+   4. 电影胶片颗粒底噪 (全站图层)
+   ------------------------------------------------------ */
+body::after {
+  content: ""; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAUVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAnz94xAAAAGnRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAACQklEQVQ4jWNgYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzNzeX65L3AAA=");
+  opacity: 0.02; pointer-events: none; z-index: 9999; 
+}
+
+/* ------------------------------------------------------
+   5. 时间线滚动进度条 (修正版)
+   ------------------------------------------------------ */
+@supports (animation-timeline: scroll()) {
+  .header::after {
+    content: ""; position: absolute; bottom: 0; left: 32px; right: 32px; height: 2px; 
+    background: linear-gradient(90deg, var(--sl-color-accent), #d8b4fe);
+    border-radius: 2px; transform-origin: left;
+    animation: timelinePlayhead linear;
+    animation-timeline: scroll(root); /* 监听全站滚动 */
+  }
+}
+
+@keyframes timelinePlayhead {
+  0% { transform: scaleX(0); }
+  100% { transform: scaleX(1); }
+}
+
+/* ------------------------------------------------------
+   6. 卡片、按钮、搜索框：全站柔化
+   ------------------------------------------------------ */
+.card {
+  border-radius: var(--radius-lg) !important;
+  background-color: var(--glass-bg) !important;
+  border: 1px solid var(--glass-border) !important;
+  transition: var(--transition-liquid) !important;
+}
+.card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px var(--liquid-glow) !important; }
+
+.hero .actions a { border-radius: 50px !important; transition: var(--transition-liquid) !important; }
+.search-input { border-radius: var(--radius-md) !important; }
+
+/* ------------------------------------------------------
+   7. 进场动画：丝滑淡入
+   ------------------------------------------------------ */
 .hero > *, .sl-markdown-content > * {
   animation: liquidFadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   opacity: 0;
 }
-
 @keyframes liquidFadeUp {
   0% { opacity: 0; transform: translateY(30px) scale(0.95); }
   100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 
-/* ======================================================
-   8. 电影颗粒纹理
-   ====================================================== */
-body::after {
-  content: ""; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAUVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAnz94xAAAAGnRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAACQklEQVQ4jWNgYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzNzeX65L3AAA=");
-  opacity: 0.025; pointer-events: none; z-index: 9999; 
-}
-
-/* ======================================================
-   9. 时间线进度条
-   ====================================================== */
-@supports (animation-timeline: scroll()) {
-  .header::after {
-    content: ""; position: absolute; bottom: 0; left: 32px; right: 32px; height: 2.5px; 
-    background: linear-gradient(90deg, var(--sl-color-accent) 0%, #d8b4fe 100%);
-    border-radius: 2px; transform-origin: left center;
-    animation-timeline: scroll(nearest); animation-name: timelinePlayhead; animation-timing-function: linear; 
-    box-shadow: 0 0 10px -1px var(--liquid-glow) !important;
+/* ------------------------------------------------------
+   8. 响应式适配 (手机端)
+   ------------------------------------------------------ */
+@media (max-width: 50rem) {
+  .header {
+    top: 0 !important; width: 100% !important; border-radius: 0 !important;
+    padding: 0 16px !important; border: none !important;
+    border-bottom: 1px solid var(--glass-border) !important;
+    left: 0 !important; transform: none !important;
   }
+  .sidebar-pane { padding-top: 0 !important; }
+  .sidebar-content, .sidebar-pane nav { margin: 0 !important; border-radius: 0 !important; width: 100% !important; max-height: none !important;}
 }
-
-@keyframes timelinePlayhead { 0% { transform: scaleX(0); opacity: 0; } 100% { transform: scaleX(1); opacity: 1; } }
