@@ -1,7 +1,5 @@
 /* ======================================================
    Aero Space - Liquid Glassmorphism Theme 9.0 (Double Layer FIX)
-   by Xiaoxi (Video Editor X AI Coder)
-   不精简版：强制剥离双层外壳，实现唯一悬浮胶囊
    ====================================================== */
 
 /* ------------------------------------------------------
@@ -28,45 +26,40 @@
 }
 
 /* ------------------------------------------------------
-   2. 核心修复：彻底扒掉最外层壳 (Stripping the Shell)
+   2. 核心修复：彻底消除外层壳
+   关键：用 display:contents 让 site-header 完全"消失"
    ------------------------------------------------------ */
-/* 强制取消 Starlight 顶栏外壳的所有视觉特征 */
 site-header {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  filter: none !important;
-  /* 确保外壳不占位，不产生多余的边框感 */
-  height: 0 !important; 
-  overflow: visible !important;
+  display: contents !important;
+}
+
+/* display:contents 后，site-header 本身不渲染任何盒模型
+   但以防万一某些浏览器不支持，加上兜底 */
+site-header::before,
+site-header::after {
+  display: none !important;
 }
 
 /* ------------------------------------------------------
    3. 重新塑造内层胶囊 (.header) 为唯一发光体
    ------------------------------------------------------ */
 .header {
-  /* 绝对固定定位 */
   position: fixed !important; 
   top: 16px !important; 
-  left: 0 !important;
-  right: 0 !important;
+  left: 50% !important;
+  right: auto !important;
+  transform: translateX(-50%) !important;
   width: 92% !important; 
   max-width: 1400px !important;
-  margin: 0 auto !important; 
   
-  /* 内部内容呼吸感 */
   padding: 0 40px !important;
-  height: 64px !important; /* 给定固定高度，确保内部垂直居中 */
+  height: 64px !important;
   border-radius: 50px !important; 
   
-  /* 液体玻璃质感 - 这是唯一的一层 */
   background-color: var(--glass-bg) !important;
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
   
-  /* 唯一的发光边框与阴影 */
   border: 1px solid var(--glass-border) !important;
   box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8), 
               0 0 20px -5px var(--liquid-glow) !important;
@@ -74,29 +67,26 @@ site-header {
   transition: var(--transition-liquid) !important;
   z-index: 1000 !important; 
   
-  /* 修复 Starlight 的默认 grid 布局，防止挤压 */
-  display: grid !important;
+  display: flex !important;
   align-items: center !important;
 }
 
-/* 保护网站标题可见度 */
 .site-title {
   color: #fff !important;
   font-weight: 800 !important;
   letter-spacing: -0.02em;
 }
 
-/* 悬浮互动效果 */
 .header:hover {
   background-color: rgba(20, 21, 30, 0.85) !important;
-  transform: translateY(-2px);
+  transform: translateX(-50%) translateY(-2px) !important;
   border-color: rgba(167, 139, 250, 0.3) !important;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9), 
               0 0 30px -5px var(--liquid-glow) !important;
 }
 
 /* ------------------------------------------------------
-   4. 侧边栏：独立悬浮玻璃面板
+   4. 侧边栏
    ------------------------------------------------------ */
 sidebar-drawer {
   background: transparent !important;
@@ -104,11 +94,10 @@ sidebar-drawer {
 }
 
 .sidebar-pane {
-  padding-top: 100px !important; /* 避开悬浮顶栏 */
+  padding-top: 100px !important;
   background: transparent !important;
 }
 
-/* 侧边栏内容容器：变圆角悬浮玻璃 */
 .sidebar-content,
 .sidebar-pane nav {
   background-color: var(--glass-bg) !important;
@@ -122,7 +111,6 @@ sidebar-drawer {
   max-height: 75vh !important;
 }
 
-/* 侧边栏链接动效 */
 .sidebar-pane a {
   border-radius: var(--radius-md) !important;
   margin: 4px 8px !important;
@@ -147,16 +135,16 @@ sidebar-drawer {
 }
 
 /* ------------------------------------------------------
-   5. 电影胶片颗粒底噪 (Cinematic Grain)
+   5. 电影颗粒底噪
    ------------------------------------------------------ */
 body::after {
   content: ""; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAUVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAnz94xAAAAGnRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAACQklEQVQ4jWNgYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzNzeX65L3AAA=");
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAUVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAnz94xAAAAGnRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAACQklEQVQ4jWNgYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzNzeX65L3AAA=");
   opacity: 0.02; pointer-events: none; z-index: 9999; 
 }
 
 /* ------------------------------------------------------
-   6. 时间线滚动进度条
+   6. 滚动进度条
    ------------------------------------------------------ */
 @supports (animation-timeline: scroll()) {
   .header::after {
@@ -173,7 +161,7 @@ body::after {
 }
 
 /* ------------------------------------------------------
-   7. 全局微调 (卡片、按钮、手机端)
+   7. 全局微调
    ------------------------------------------------------ */
 .card {
   border-radius: var(--radius-lg) !important;
@@ -187,8 +175,14 @@ body::after {
 
 @media (max-width: 50rem) {
   .header {
-    top: 0 !important; width: 100% !important; border-radius: 0 !important;
-    padding: 0 16px !important; border: none !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    transform: none !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    padding: 0 16px !important;
+    border: none !important;
     border-bottom: 1px solid var(--glass-border) !important;
   }
   .sidebar-pane { padding-top: 0 !important; }
