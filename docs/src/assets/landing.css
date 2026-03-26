@@ -1,9 +1,10 @@
 /* ======================================================
-   Aero Space - Liquid Glassmorphism Theme 9.0 (Double Layer FIX)
+   Aero Space - Liquid Glassmorphism Theme 9.0 (Final Fix)
+   by Xiaoxi (Video Editor X AI Coder)
    ====================================================== */
 
 /* ------------------------------------------------------
-   1. 基础变量重定义
+   1. 基础变量
    ------------------------------------------------------ */
 :root {
   --radius-xl: 32px; 
@@ -26,24 +27,40 @@
 }
 
 /* ------------------------------------------------------
-   2. 核心修复：彻底消除外层壳
-   关键：用 display:contents 让 site-header 完全"消失"
+   2. 核心修复：外层壳 <header.header> 彻底透明
+   内层胶囊 <div.header> 才是唯一发光体
    ------------------------------------------------------ */
 site-header {
-  display: contents !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  height: 0 !important;
+  overflow: visible !important;
+  position: static !important;
 }
 
-/* display:contents 后，site-header 本身不渲染任何盒模型
-   但以防万一某些浏览器不支持，加上兜底 */
-site-header::before,
-site-header::after {
-  display: none !important;
+/* 外层壳：header 标签透明化 */
+header.header {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  padding: 0 !important;
+  height: auto !important;
+  overflow: visible !important;
+  position: static !important;
 }
 
 /* ------------------------------------------------------
-   3. 重新塑造内层胶囊 (.header) 为唯一发光体
+   3. 内层胶囊 div.header：唯一发光体
    ------------------------------------------------------ */
-.header {
+div.header {
   position: fixed !important; 
   top: 16px !important; 
   left: 50% !important;
@@ -77,7 +94,7 @@ site-header::after {
   letter-spacing: -0.02em;
 }
 
-.header:hover {
+div.header:hover {
   background-color: rgba(20, 21, 30, 0.85) !important;
   transform: translateX(-50%) translateY(-2px) !important;
   border-color: rgba(167, 139, 250, 0.3) !important;
@@ -139,7 +156,7 @@ sidebar-drawer {
    ------------------------------------------------------ */
 body::after {
   content: ""; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAUVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAnz94xAAAAGnRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAACQklEQVQ4jWNgYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzNzeX65L3AAA=");
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAUVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAnz94xAAAAGnRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAACQklEQVQ4jWNgYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzNzeX65L3AAA=");
   opacity: 0.02; pointer-events: none; z-index: 9999; 
 }
 
@@ -147,7 +164,7 @@ body::after {
    6. 滚动进度条
    ------------------------------------------------------ */
 @supports (animation-timeline: scroll()) {
-  .header::after {
+  div.header::after {
     content: ""; position: absolute; bottom: 0; left: 40px; right: 40px; height: 2px; 
     background: linear-gradient(90deg, var(--sl-color-accent), #d8b4fe);
     border-radius: 2px; transform-origin: left;
@@ -169,12 +186,18 @@ body::after {
   border: 1px solid var(--glass-border) !important;
   transition: var(--transition-liquid) !important;
 }
-.card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px var(--liquid-glow) !important; }
+.card:hover { 
+  transform: translateY(-8px); 
+  box-shadow: 0 15px 30px var(--liquid-glow) !important; 
+}
 
 .search-input { border-radius: var(--radius-md) !important; }
 
+/* ------------------------------------------------------
+   8. 移动端适配
+   ------------------------------------------------------ */
 @media (max-width: 50rem) {
-  .header {
+  div.header {
     top: 0 !important;
     left: 0 !important;
     right: 0 !important;
