@@ -1,5 +1,5 @@
 /* ======================================================
-   Aero Space - Liquid Glassmorphism Theme 3.0 (Ultimate)
+   Aero Space - Liquid Glassmorphism Theme 4.0 (Ultimate Edition)
    by Xiaoxi (Video Editor X AI Coder)
    ====================================================== */
 
@@ -7,69 +7,69 @@
    1. 基础变量重定义 (大圆角 & 液体霓虹)
    ====================================================== */
 :root {
-  /* 定义全局大圆角变量 - 核心优化 */
-  --radius-xl: 32px; /* 外部大容器 */
+  /* 全局大圆角变量 */
+  --radius-xl: 32px; /* 外部容器 */
   --radius-lg: 20px; /* 卡片、侧边栏容器 */
   --radius-md: 12px; /* 按钮、链接 */
 
-  /* 定义赛博极客颜色 (增加亮度以提升通透感) */
+  /* 赛博极客颜色 (增加亮度提升通透感) */
   --sl-color-accent-low: #1e144a;
   --sl-color-accent: #a78bfa; /* 更亮的霓虹紫 */
   --sl-color-accent-high: #ddd6fe;
 
-  /* 液体玻璃的基础背景色 (极低透明度 + 背景模糊是关键) */
-  --glass-bg: rgba(20, 21, 30, 0.6);
-  --glass-border: rgba(255, 255, 255, 0.08); /* 极细的内发光边框 */
+  /* 液体玻璃背景色 */
+  --glass-bg: rgba(20, 21, 30, 0.65);
+  --glass-border: rgba(255, 255, 255, 0.08); /* 内发光边框 */
   --liquid-glow: rgba(167, 139, 250, 0.5); /* 霓虹紫液体光晕 */
 
-  /* 定义全局液体过渡动画 - 丝滑的关键 */
+  /* 全局液体过渡动画 - 丝滑的关键 */
   --transition-liquid: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-/* 覆盖底层背景色，使其更深邃以反衬玻璃感 */
+/* 覆盖底层背景色，使其更深邃 */
 :root[data-theme='dark'] {
   --sl-color-bg: #0b0d12;
 }
 
 /* ======================================================
    2. 全局基础柔化 (大圆角应用)
-   ====================================================== */
+   ===================================================== = */
 /* 搜索框大圆角 */
 .search-input {
   border-radius: var(--radius-md) !important;
 }
 
 /* ======================================================
-   3. 导航栏终极进化：居中悬浮大胶囊 (Floating Pill Header)
+   3. 导航栏终极进化：悬浮大胶囊 (Floating Pill Header)
    ====================================================== */
 site-header {
   position: sticky !important;
-  top: 16px !important; /* 距离页面顶部留出呼吸空间 */
+  top: 16px !important; /* 距离顶部呼吸空间 */
   width: 92% !important; /* 左右留白 */
   max-width: 1400px !important;
-  margin: 0 auto !important; /* 绝对水平居中 */
-  border-radius: 50px !important; /* 终极大圆角 / 胶囊形状 */
+  margin: 0 auto !important; /* 水平居中 */
+  border-radius: 50px !important; /* 胶囊形状 */
   
   /* 强化液体玻璃质感 */
   background-color: rgba(20, 21, 30, 0.65) !important;
   backdrop-filter: blur(24px) saturate(200%);
   -webkit-backdrop-filter: blur(24px) saturate(200%);
   
-  /* 发光边框与超级悬浮阴影 */
+  /* 发光边框与悬浮阴影 */
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8), 
               0 0 20px -5px rgba(167, 139, 250, 0.15) !important;
               
   transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1) !important;
-  z-index: 100 !important; /* 确保永远在最上层 */
+  z-index: 100 !important; /* 永远在最上层 */
 }
 
-/* 让导航栏内部的内容往里收一点，适应大圆角 */
+/* 让导航栏内部内容收一点 */
 site-header .header {
   padding: 0 24px !important; 
 }
 
-/* 鼠标悬浮在顶栏时：液体光晕增强，微微上浮 */
+/* 悬浮时液体光晕增强 */
 site-header:hover {
   background-color: rgba(20, 21, 30, 0.8) !important;
   border-color: rgba(167, 139, 250, 0.4) !important;
@@ -87,22 +87,20 @@ site-header:hover {
   border-radius: var(--radius-lg) !important;
   background-color: var(--glass-bg) !important;
   border: 1px solid var(--glass-border) !important;
-  /* 增加基础毛玻璃模糊，让卡片内部通透 */
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   
   transition: var(--transition-liquid) !important;
 }
 
-/* 液体卡片悬浮时的魔法 */
+/* 液体卡片悬浮时的膨胀滑出 */
 .card:hover {
-  transform: translateY(-8px) scale(1.03); /* 微微膨胀滑出 */
+  transform: translateY(-8px) scale(1.03); 
   border-color: rgba(255, 255, 255, 0.15) !important;
-  /* 液体光晕阴影 */
   box-shadow: 0 20px 40px -15px var(--liquid-glow) !important;
 }
 
-/* 液体光晕效果 - 使用伪元素在悬浮时流动 */
+/* 液体光晕伪元素 */
 .card::after {
   content: "";
   position: absolute;
@@ -114,15 +112,14 @@ site-header:hover {
   opacity: 0;
   transition: opacity 0.6s ease;
   pointer-events: none;
-  z-index: -1; /* 在文字下方 */
+  z-index: -1; 
 }
 
 .card:hover::after {
-  opacity: 0.2; /* 悬浮时显现淡淡的液体流动感 */
+  opacity: 0.2; 
   animation: liquidFlow 4s linear infinite;
 }
 
-/* 定义液体流动动画 */
 @keyframes liquidFlow {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
@@ -132,7 +129,7 @@ site-header:hover {
    5. 主页大按钮：胶囊液体风格 (Liquid Action Button)
    ====================================================== */
 .hero .actions a {
-  border-radius: 50px !important; /* 完全的胶囊圆角 */
+  border-radius: 50px !important; /* 完全胶囊圆角 */
   text-transform: uppercase;
   letter-spacing: 0.1em;
   font-weight: 700 !important;
@@ -155,11 +152,11 @@ site-header:hover {
    6. 侧边栏优化：柔滑液体链接 (Liquid Sidebar)
    ====================================================== */
 sidebar-drawer {
-  background-color: rgba(11, 13, 18, 0.8) !important; /* 深度背景毛玻璃 */
+  background-color: rgba(11, 13, 18, 0.8) !important; /* 深度毛玻璃 */
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
   border-right: 1px solid var(--glass-border) !important;
-  /* 适配悬浮顶栏：给侧边栏顶部加一点空间，防止重叠 */
+  /* 适配悬浮顶栏 */
   padding-top: 16px !important;
 }
 
@@ -168,7 +165,7 @@ sidebar-drawer {
   margin: 4px 12px !important; /* 增加间距以显现圆角 */
   padding: 8px 16px !important;
   transition: var(--transition-liquid) !important;
-  color: #94a3b8 !important; /* 默认状态下加一个柔和的左边框占位 */
+  color: #94a3b8 !important; /* 默认柔和边框占位 */
   border-left: 3px solid transparent !important;
 }
 
@@ -177,7 +174,7 @@ sidebar-drawer {
   background-color: rgba(167, 139, 250, 0.08) !important;
   color: var(--sl-color-white) !important;
   border-left: 3px solid rgba(167, 139, 250, 0.4) !important;
-  transform: translateX(6px); /* 更明显的向右液体平移 */
+  transform: translateX(6px); /* 向右液体平移 */
 }
 
 /* 当前激活链接：液体呼吸光晕 */
@@ -186,12 +183,11 @@ sidebar-drawer {
   color: var(--sl-color-accent) !important;
   font-weight: 600 !important;
   border-left: 3px solid var(--sl-color-accent) !important;
-  /* 霓虹发光阴影 */
   box-shadow: inset 25px 0 25px -25px var(--liquid-glow) !important;
 }
 
 /* ======================================================
-   7. 进场动画优化：更柔滑的浮现
+   7. 进场动画优化：更柔滑的浮现 (Liquid Fade)
    ====================================================== */
 .hero > *, .sl-markdown-content > * {
   animation: liquidFadeUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -201,10 +197,63 @@ sidebar-drawer {
 @keyframes liquidFadeUp {
   0% {
     opacity: 0;
-    transform: translateY(30px) scale(0.95); /* 进场时有一个微弱的膨胀感 */
+    transform: translateY(30px) scale(0.95); 
   }
   100% {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
+}
+
+/* ======================================================
+   8. 新增细节特效：电影胶片颗粒底噪 (Cinematic Grain Texture)
+   ====================================================== */
+/* 使用Base64编码的微弱噪点，直接作为全站覆盖层 */
+body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  /* 👇 这里的 Base64 就是生成的噪点颗粒纹理 */
+  background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4XiDAAAAUVBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAnz94xAAAAGnRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAACQklEQVQ4jWNgYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzeX65L3AAAAYXRSTlMAAQIDBAUGBwgJCgsMDQ4PEBESExQVFhcYGRoayW5H2AAAAFhJREFUOM9vYCAdMTIzNDU2NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzY3NzNzeX65L3AAA=")!
+  
+  /* 颗粒需要极其微弱，只需一点点质感，设置超低透明度 */
+  opacity: 0.025; 
+  pointer-events: none; /* 防止遮挡鼠标点击事件 */
+  z-index: 9999; /* 放在所有元素最上面 */
+}
+
+/* ======================================================
+   9. 新增细节特效：“时间线播放头”滚动手感 (Reading Progress Timeline)
+   ====================================================== */
+/* 这里利用 CSS scroll-timeline 特性实现 (Graceful Degradation for unsupporting browsers) */
+@supports (animation-timeline: scroll()) {
+  site-header::after {
+    content: "";
+    position: absolute;
+    bottom: 0; /* 放在胶囊导航栏的最底部 */
+    left: 24px; /* 对齐内部 padding */
+    right: 24px;
+    height: 2.5px; /* 极细的发光线，像时间线播放头 */
+    background: linear-gradient(90deg, var(--sl-color-accent) 0%, #d8b4fe 100%);
+    border-radius: 2px;
+    transform-origin: left center;
+    
+    /* 绑定滚动动画 */
+    animation-timeline: scroll(nearest);
+    animation-name: timelinePlayhead;
+    animation-timing-function: linear; /* 线性跟随滚动 */
+    
+    /* 播放头自身的发光特效 */
+    box-shadow: 0 0 10px -1px var(--liquid-glow) !important;
+  }
+}
+
+/* 定义播放头从 0% 增长到 100% 的关键帧 */
+@keyframes timelinePlayhead {
+  0% { transform: scaleX(0); opacity: 0; }
+  2% { transform: scaleX(0.01); opacity: 1; } /* 开始滚动后立刻显现 */
+  100% { transform: scaleX(1); opacity: 1; }
 }
