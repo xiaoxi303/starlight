@@ -1,6 +1,7 @@
 ---
 import Icon from './Icon.astro';
 import type { HTMLAttributes } from 'astro/types';
+import LiquidGlass from '../components/LiquidGlass.astro';
 
 interface Props extends Omit<HTMLAttributes<'a'>, 'title'> {
 	title: string;
@@ -10,27 +11,40 @@ interface Props extends Omit<HTMLAttributes<'a'>, 'title'> {
 const { title, description, ...attributes } = Astro.props;
 ---
 
-<div class="sl-link-card">
-	<span class="sl-flex stack">
-		<a {...attributes}>
-			<span class="title" set:html={title} />
-		</a>
-		{description && <span class="description" set:html={description} />}
-	</span>
-	<Icon name="right-arrow" size="1.333em" class="icon rtl:flip" />
-</div>
+<LiquidGlass
+	isBlock
+	cornerRadius={8}
+	elasticity={0.08}
+	class="sl-link-card-glass"
+	aberrationIntensity={1.5}
+	blurAmount={0.04}
+>
+	<div class="sl-link-card">
+		<span class="sl-flex stack">
+			<a {...attributes}>
+				<span class="title" set:html={title} />
+			</a>
+			{description && <span class="description" set:html={description} />}
+		</span>
+		<Icon name="right-arrow" size="1.333em" class="icon rtl:flip" />
+	</div>
+</LiquidGlass>
 
 <style>
 	@layer starlight.components {
+		.sl-link-card-glass {
+			display: block;
+			height: 100%;
+		}
 		.sl-link-card {
 			display: grid;
 			grid-template-columns: 1fr auto;
 			gap: 0.5rem;
-			border: 1px solid var(--sl-color-gray-5);
 			border-radius: 0.5rem;
 			padding: 1rem;
-			box-shadow: var(--sl-shadow-sm);
 			position: relative;
+			height: 100%;
+			background-color: transparent;
 		}
 
 		a {
@@ -66,12 +80,11 @@ const { title, description, ...attributes } = Astro.props;
 		}
 
 		/* Hover state */
-		.sl-link-card:hover {
-			background: var(--sl-color-gray-7, var(--sl-color-gray-6));
-			border-color: var(--sl-color-gray-2);
+		.sl-link-card-glass:hover .sl-link-card {
+			/* background and border handled by glass */
 		}
 
-		.sl-link-card:hover .icon {
+		.sl-link-card-glass:hover .icon {
 			color: var(--sl-color-white);
 		}
 	}

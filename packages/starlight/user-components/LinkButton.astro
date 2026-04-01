@@ -2,6 +2,7 @@
 import type { HTMLAttributes } from 'astro/types';
 import type { StarlightIcon } from '../components-internals/Icons';
 import Icon from './Icon.astro';
+import LiquidGlass from '../components/LiquidGlass.astro';
 
 interface Props extends Omit<HTMLAttributes<'a'>, 'href'> {
 	href: string | URL;
@@ -19,11 +20,23 @@ const {
 } = Astro.props;
 ---
 
-<a class:list={['sl-link-button not-content', variant, className]} {...attrs}>
-	{icon && iconPlacement === 'start' && <Icon name={icon} size="1.5rem" />}
-	<slot />
-	{icon && iconPlacement === 'end' && <Icon name={icon} size="1.5rem" />}
-</a>
+{
+	variant === 'primary' ? (
+		<LiquidGlass elasticity={0.15}>
+			<a class:list={['sl-link-button not-content', variant, className, 'glass-link-btn']} {...attrs}>
+				{icon && iconPlacement === 'start' && <Icon name={icon} size="1.5rem" />}
+				<slot />
+				{icon && iconPlacement === 'end' && <Icon name={icon} size="1.5rem" />}
+			</a>
+		</LiquidGlass>
+	) : (
+		<a class:list={['sl-link-button not-content', variant, className]} {...attrs}>
+			{icon && iconPlacement === 'start' && <Icon name={icon} size="1.5rem" />}
+			<slot />
+			{icon && iconPlacement === 'end' && <Icon name={icon} size="1.5rem" />}
+		</a>
+	)
+}
 
 <style>
 	@layer starlight.components {
@@ -44,6 +57,15 @@ const {
 			background: var(--sl-color-text-accent);
 			border-color: var(--sl-color-text-accent);
 			color: var(--sl-color-black);
+		}
+		
+		/* Remove standard primary styling when inside glass */
+		.sl-link-button.primary.glass-link-btn {
+			background: transparent;
+			border-color: transparent;
+			color: var(--sl-color-white);
+			padding: 0;
+			/* the parent LiquidGlass handles visual appearance & padding */
 		}
 		.sl-link-button.primary:hover {
 			color: var(--sl-color-black);
