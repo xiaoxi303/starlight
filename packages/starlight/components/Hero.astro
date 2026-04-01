@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import { PAGE_TITLE_ID } from '../constants';
 import LinkButton from '../user-components/LinkButton.astro';
+import LiquidGlass from './LiquidGlass.astro';
 
 const { data } = Astro.locals.starlightRoute.entry;
 const { title = data.title, tagline, image, actions = [] } = data.hero || {};
@@ -51,10 +52,12 @@ if (image) {
 				<div class="sl-flex actions">
 					{actions.map(
 						({ attrs: { class: className, ...attrs } = {}, icon, link: href, text, variant }) => (
-							<LinkButton {href} {variant} icon={icon?.name} class:list={[className]} {...attrs}>
-								{text}
-								{icon?.html && <Fragment set:html={icon.html} />}
-							</LinkButton>
+							<LiquidGlass padding="0" cornerRadius={999} aberrationIntensity={3} elasticity={0.25} blurAmount={0.2}>
+								<LinkButton {href} {variant} icon={icon?.name} class:list={[className]} style="background: transparent; border-color: rgba(255,255,255,0.2); color: white;" {...attrs}>
+									{text}
+									{icon?.html && <Fragment set:html={icon.html} />}
+								</LinkButton>
+							</LiquidGlass>
 						)
 					)}
 				</div>

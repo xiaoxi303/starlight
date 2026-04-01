@@ -1,0 +1,325 @@
+---
+import { displacementMap } from './liquidGlassUtils';
+
+interface Props {
+  displacementScale?: number;
+  blurAmount?: number;
+  saturation?: number;
+  aberrationIntensity?: number;
+  elasticity?: number;
+  cornerRadius?: number;
+  class?: string;
+  padding?: string;
+  overLight?: boolean;
+}
+
+const {
+  displacementScale = 25,
+  blurAmount = 0.0625,
+  saturation = 140,
+  aberrationIntensity = 2,
+  elasticity = 0.15,
+  cornerRadius = 999,
+  class: className = '',
+  padding = '24px 32px',
+  overLight = false,
+} = Astro.props;
+
+const id = Math.random().toString(36).slice(2, 9);
+const filterId = `glass-filter-${id}`;
+const componentId = `liquid-glass-${id}`;
+
+const dScale = overLight ? displacementScale * 0.5 : displacementScale;
+const blurRadius = (overLight ? 12 : 4) + blurAmount * 32;
+---
+<liquid-glass id={componentId} class:list={["liquid-glass-container", className]} data-elasticity={elasticity}>
+  <svg style="position: absolute; width: 0; height: 0; top: 0; left: 0; pointer-events: none;" aria-hidden="true">
+    <defs>
+      <radialGradient id={`${filterId}-edge-mask`} cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="black" stop-opacity="0" />
+        <stop offset={`${Math.max(30, 80 - aberrationIntensity * 2)}%`} stop-color="black" stop-opacity="0" />
+        <stop offset="100%" stop-color="white" stop-opacity="1" />
+      </radialGradient>
+      <filter id={filterId} x="-35%" y="-35%" width="170%" height="170%" color-interpolation-filters="sRGB">
+        <feImage id="feimage" x="0" y="0" width="100%" height="100%" result="DISPLACEMENT_MAP" href={displacementMap} preserveAspectRatio="xMidYMid slice" />
+        <feColorMatrix in="DISPLACEMENT_MAP" type="matrix" values="0.3 0.3 0.3 0 0 0.3 0.3 0.3 0 0 0.3 0.3 0.3 0 0 0 0 0 1 0" result="EDGE_INTENSITY" />
+        <feComponentTransfer in="EDGE_INTENSITY" result="EDGE_MASK">
+          <feFuncA type="discrete" tableValues={`0 ${aberrationIntensity * 0.05} 1`} />
+        </feComponentTransfer>
+        <feOffset in="SourceGraphic" dx="0" dy="0" result="CENTER_ORIGINAL" />
+        <feDisplacementMap in="SourceGraphic" in2="DISPLACEMENT_MAP" scale={-dScale} xChannelSelector="R" yChannelSelector="B" result="RED_DISPLACED" />
+        <feColorMatrix in="RED_DISPLACED" type="matrix" values="1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0" result="RED_CHANNEL" />
+        <feDisplacementMap in="SourceGraphic" in2="DISPLACEMENT_MAP" scale={-(dScale + aberrationIntensity * 0.05)} xChannelSelector="R" yChannelSelector="B" result="GREEN_DISPLACED" />
+        <feColorMatrix in="GREEN_DISPLACED" type="matrix" values="0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 1 0" result="GREEN_CHANNEL" />
+        <feDisplacementMap in="SourceGraphic" in2="DISPLACEMENT_MAP" scale={-(dScale + aberrationIntensity * 0.1)} xChannelSelector="R" yChannelSelector="B" result="BLUE_DISPLACED" />
+        <feColorMatrix in="BLUE_DISPLACED" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 1 0" result="BLUE_CHANNEL" />
+        <feBlend in="GREEN_CHANNEL" in2="BLUE_CHANNEL" mode="screen" result="GB_COMBINED" />
+        <feBlend in="RED_CHANNEL" in2="GB_COMBINED" mode="screen" result="RGB_COMBINED" />
+        <feGaussianBlur in="RGB_COMBINED" stdDeviation={Math.max(0.1, 0.5 - aberrationIntensity * 0.1)} result="ABERRATED_BLURRED" />
+        <feComposite in="ABERRATED_BLURRED" in2="EDGE_MASK" operator="in" result="EDGE_ABERRATION" />
+        <feComponentTransfer in="EDGE_MASK" result="INVERTED_MASK">
+          <feFuncA type="table" tableValues="1 0" />
+        </feComponentTransfer>
+        <feComposite in="CENTER_ORIGINAL" in2="INVERTED_MASK" operator="in" result="CENTER_CLEAN" />
+        <feComposite in="EDGE_ABERRATION" in2="CENTER_CLEAN" operator="over" />
+      </filter>
+    </defs>
+  </svg>
+
+  <div class="glass-layers">
+    <!-- Overlight shadow layers -->
+    {overLight && <div class="glass-overlight shadow-1" style={`border-radius: ${cornerRadius}px;`}></div>}
+    {overLight && <div class="glass-overlight shadow-2" style={`border-radius: ${cornerRadius}px;`}></div>}
+    
+    <div class="glass-main" style={`border-radius: ${cornerRadius}px; box-shadow: ${overLight ? '0px 16px 70px rgba(0, 0, 0, 0.75)' : '0px 12px 40px rgba(0, 0, 0, 0.25)'};`}>
+      <span class="glass-backdrop" style={`filter: url(#${filterId}); backdrop-filter: blur(${blurRadius}px) saturate(${saturation}%);`}></span>
+      <div class="glass-content" style={`padding: ${padding}; text-shadow: ${overLight ? '0px 2px 12px rgba(0, 0, 0, 0)' : '0px 2px 12px rgba(0, 0, 0, 0.4)'};`}>
+        <slot />
+      </div>
+    </div>
+    
+    <!-- Border layers -->
+    <span class="glass-border border-1" style={`border-radius: ${cornerRadius}px;`}></span>
+    <span class="glass-border border-2" style={`border-radius: ${cornerRadius}px;`}></span>
+    
+    <!-- Hover effect layers -->
+    <div class="glass-hover hover-1" style={`border-radius: ${cornerRadius}px;`}></div>
+    <div class="glass-hover hover-2" style={`border-radius: ${cornerRadius}px;`}></div>
+    <div class="glass-hover hover-3" style={`border-radius: ${cornerRadius}px;`}></div>
+  </div>
+</liquid-glass>
+
+<style>
+  .liquid-glass-container {
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+  }
+  .glass-layers {
+    position: relative;
+    transition: all ease-out 0.2s;
+    /* Transformation updated by JS */
+  }
+  .glass-main {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    overflow: hidden;
+    transition: all 0.2s ease-in-out;
+  }
+  .glass-backdrop {
+    position: absolute;
+    inset: 0;
+  }
+  .glass-content {
+    position: relative;
+    z-index: 1;
+    color: white;
+    font-weight: 500;
+  }
+  .glass-border {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    padding: 1.5px;
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    box-shadow: 0 0 0 0.5px rgba(255, 255, 255, 0.5) inset, 0 1px 3px rgba(255, 255, 255, 0.25) inset, 0 1px 4px rgba(0, 0, 0, 0.35);
+  }
+  .border-1 {
+    mix-blend-mode: screen;
+    opacity: 0.2;
+    background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.12) 33%, rgba(255,255,255,0.4) 66%, transparent 100%);
+  }
+  .border-2 {
+    mix-blend-mode: overlay;
+    background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.32) 33%, rgba(255,255,255,0.6) 66%, transparent 100%);
+  }
+  .glass-overlight {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    background: black;
+    transition: all 0.15s ease-in-out;
+  }
+  .shadow-1 { opacity: 0.2; }
+  .shadow-2 { opacity: 1; mix-blend-mode: overlay; }
+
+  .glass-hover {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: calc(100% + 1px);
+    height: 100%;
+    pointer-events: none;
+    transition: all 0.2s ease-out;
+    mix-blend-mode: overlay;
+    opacity: 0;
+  }
+  .hover-1 { background-image: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 50%); }
+  .hover-2 { background-image: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 80%); }
+  .hover-3 { background-image: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 100%); }
+
+  .liquid-glass-container.is-hovered .hover-1 { opacity: 0.5; }
+  .liquid-glass-container.is-active .hover-1 { opacity: 0.5; }
+  .liquid-glass-container.is-active .hover-2 { opacity: 0.5; }
+  .liquid-glass-container.is-hovered .hover-3 { opacity: 0.4; }
+  .liquid-glass-container.is-active .hover-3 { opacity: 0.8; }
+</style>
+
+<script>
+  class LiquidGlass extends HTMLElement {
+    elasticity: number;
+    layers: HTMLElement | null;
+    border1: HTMLElement | null;
+    border2: HTMLElement | null;
+    isHovered: boolean;
+    isActive: boolean;
+    mouseX: number;
+    mouseY: number;
+
+    constructor() {
+      super();
+      this.elasticity = parseFloat(this.dataset.elasticity || "0.15");
+      this.layers = this.querySelector('.glass-layers') as HTMLElement;
+      this.border1 = this.querySelector('.border-1') as HTMLElement;
+      this.border2 = this.querySelector('.border-2') as HTMLElement;
+      
+      this.isHovered = false;
+      this.isActive = false;
+      this.mouseX = 0;
+      this.mouseY = 0;
+      
+      this.handleMouseMove = this.handleMouseMove.bind(this);
+      this.handleMouseEnter = this.handleMouseEnter.bind(this);
+      this.handleMouseLeave = this.handleMouseLeave.bind(this);
+      this.handleMouseDown = this.handleMouseDown.bind(this);
+      this.handleMouseUp = this.handleMouseUp.bind(this);
+      
+      // Fix for Firefox drop-shadow issues
+      if (navigator.userAgent.toLowerCase().includes("firefox")) {
+        const backdrop = this.querySelector('.glass-backdrop');
+        if (backdrop) (backdrop as HTMLElement).style.filter = 'none';
+      }
+    }
+
+    connectedCallback() {
+      window.addEventListener('mousemove', this.handleMouseMove);
+      this.addEventListener('mouseenter', this.handleMouseEnter);
+      this.addEventListener('mouseleave', this.handleMouseLeave);
+      this.addEventListener('mousedown', this.handleMouseDown);
+      window.addEventListener('mouseup', this.handleMouseUp);
+    }
+
+    disconnectedCallback() {
+      window.removeEventListener('mousemove', this.handleMouseMove);
+      this.removeEventListener('mouseenter', this.handleMouseEnter);
+      this.removeEventListener('mouseleave', this.handleMouseLeave);
+      this.removeEventListener('mousedown', this.handleMouseDown);
+      window.removeEventListener('mouseup', this.handleMouseUp);
+    }
+
+    handleMouseEnter() {
+      this.isHovered = true;
+      this.classList.add('is-hovered');
+      this.updateTransform();
+    }
+
+    handleMouseLeave() {
+      this.isHovered = false;
+      this.isActive = false;
+      this.classList.remove('is-hovered', 'is-active');
+      this.updateTransform();
+    }
+
+    handleMouseDown() {
+      this.isActive = true;
+      this.classList.add('is-active');
+      this.updateTransform();
+    }
+
+    handleMouseUp() {
+      this.isActive = false;
+      this.classList.remove('is-active');
+      this.updateTransform();
+    }
+
+    handleMouseMove(e: MouseEvent) {
+      this.mouseX = e.clientX;
+      this.mouseY = e.clientY;
+      this.updateTransform();
+    }
+
+    updateTransform() {
+      if (!this.layers) return;
+      
+      // Allow DOM to settle layout logic
+      const rect = this.getBoundingClientRect();
+      const w = rect.width || 270;
+      const h = rect.height || 69;
+      const centerX = rect.left + w / 2;
+      const centerY = rect.top + h / 2;
+      const deltaX = this.mouseX - centerX;
+      const deltaY = this.mouseY - centerY;
+      
+      // Calculate dist from edges
+      const edgeDX = Math.max(0, Math.abs(deltaX) - w / 2);
+      const edgeDY = Math.max(0, Math.abs(deltaY) - h / 2);
+      const edgeDist = Math.sqrt(edgeDX * edgeDX + edgeDY * edgeDY);
+      
+      const activationZone = 200;
+      let scaleX = 1;
+      let scaleY = 1;
+      let transX = 0;
+      let transY = 0;
+      
+      let offsetX = ((this.mouseX - centerX) / w) * 100;
+      let offsetY = ((this.mouseY - centerY) / h) * 100;
+      
+      // Calculate elastic bounce scaling when hovered near edges
+      if (edgeDist <= activationZone) {
+        const fadeIn = 1 - (edgeDist / activationZone);
+        const centerDist = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+        if (centerDist > 0) {
+          const normX = deltaX / centerDist;
+          const normY = deltaY / centerDist;
+          const stretch = Math.min(centerDist / 300, 1) * this.elasticity * fadeIn;
+          
+          scaleX = 1 + Math.abs(normX) * stretch * 0.3 - Math.abs(normY) * stretch * 0.15;
+          scaleY = 1 + Math.abs(normY) * stretch * 0.3 - Math.abs(normX) * stretch * 0.15;
+        }
+        transX = deltaX * this.elasticity * 0.1 * fadeIn;
+        transY = deltaY * this.elasticity * 0.1 * fadeIn;
+      }
+      
+      let transformStr = `translate(${transX}px, ${transY}px)`;
+      if (this.isActive) {
+        transformStr += ` scale(0.96)`;
+      } else {
+        transformStr += ` scale(${Math.max(0.8, scaleX)}, ${Math.max(0.8, scaleY)})`;
+      }
+      
+      this.layers.style.transform = transformStr;
+      
+      // Update interactive borders
+      if (this.border1 && this.border2) {
+        const b1 = `linear-gradient(${135 + offsetX * 1.2}deg, rgba(255,255,255,0) 0%, rgba(255,255,255,${0.12 + Math.abs(offsetX)*0.008}) ${Math.max(10, 33 + offsetY*0.3)}%, rgba(255,255,255,${0.4 + Math.abs(offsetX)*0.012}) ${Math.min(90, 66 + offsetY*0.4)}%, rgba(255,255,255,0) 100%)`;
+        const b2 = `linear-gradient(${135 + offsetX * 1.2}deg, rgba(255,255,255,0) 0%, rgba(255,255,255,${0.32 + Math.abs(offsetX)*0.008}) ${Math.max(10, 33 + offsetY*0.3)}%, rgba(255,255,255,${0.6 + Math.abs(offsetX)*0.012}) ${Math.min(90, 66 + offsetY*0.4)}%, rgba(255,255,255,0) 100%)`;
+        this.border1.style.background = b1;
+        this.border2.style.background = b2;
+      }
+    }
+  }
+
+  customElements.define('liquid-glass', LiquidGlass);
+</script>
